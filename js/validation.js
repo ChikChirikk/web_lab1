@@ -11,11 +11,14 @@ let R2_oy = document.getElementById("R2_oy");
 let mR2_oy = document.getElementById("-R2_oy");
 let mR_oy = document.getElementById("-R_oy");
 
-let flag = true;
- let value_Y = 0;
 
 r_input.onchange = function () {
-    let R = r_input.value;
+    redraw_r();
+}
+
+
+function redraw_r() {
+    let R = document.getElementById("r").value;
     if (!(R == "")) {
         R_ox.innerText = (R);
         R2_ox.innerText = (R / 2);
@@ -61,5 +64,5 @@ function check_input() {
         y_input.value = "";
         return false;
     }
-}
 
+}

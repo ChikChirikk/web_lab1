@@ -5,7 +5,7 @@
     <title>Лаб1</title>
     <script src="https://yastatic.net/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
-    <script src="draw_table.js"></script>
+    <script src="js/draw_table.js"></script>
     <style>
         body {
             background: linear-gradient(-45deg, #e97f5e, #c465db, #5ca6ba, #e010d4);
@@ -24,15 +24,6 @@
             100% {
                 background-position: 0% 50%;
             }
-        }
-
-        #image_div {
-            position: relative;
-            float: left;
-        }
-
-        #image_div:hover {
-            cursor: pointer;
         }
 
         #R_ox {
@@ -96,7 +87,6 @@
             border-color: rgb(239, 231, 239);
             overflow: scroll;
         }
-
         tbody tr:hover {
             background: rgb(191, 23, 186);
             background: linear-gradient(90deg, rgba(186, 25, 181, 0.93) 0%, rgba(75, 210, 236, 0.9) 100%);
@@ -104,7 +94,7 @@
 
         th {
             color: white;
-            padding: 10px 20px;
+            padding: 10px 25px;
         }
 
         th, td {
@@ -122,20 +112,24 @@
             display: inline;
             margin-left: 10px;
             outline: none;
-        / / -webkit-appearance: none;
+            color: dimgrey;
+        /*-webkit-appearance: none;*/
             -moz-appearance: none;
             border-bottom: 2px solid #555;
             -webkit-transition: all .4s ease-in-out;
             transition: all .4s ease-in-out;
-            border: 2px;
+            /*border: 2px;*/
+            border-color: white;
             border-radius: 4px;
         }
 
         select:hover {
             cursor: pointer;
+            border-color: #5e5eec;
         }
 
         select option {
+            color: dimgrey;
             border: 0;
             border-bottom: 1px solid #555;
             padding: 10px;
@@ -148,15 +142,30 @@
             color: dimgrey;
             padding: 0.25em 0.5em;
             background-color: #ffffff;
-            border: 2px;
             border-radius: 4px;
-            border-color: rgba(191, 25, 186, 0.93);
+            border-color: rgba(2, 2, 2, 0.01);
+            outline: none;
         }
 
-        input:hover {
-            cursor: pointer;
+        /*input[type=radio] {*/
+        /*    background-color: #ca3434;*/
+        /*    background-color: #ca3434;*/
+        /*    border-radius: 2px;*/
+        /*}*/
+
+        input[type=button] {
+            border: 2px;
+            outline: none;
         }
 
+        /*input:hover, input[type=radio]:hover, input[type=select] {*/
+        /*    cursor: pointer;*/
+        /*    outline: none;*/
+        /*    border-color: #5e5eec;*/
+        /*}*/
+        /*input[type=button]:hover {*/
+        /*    border-color: white;*/
+        /*}*/
         #description {
             text-align: center;
             margin-bottom: 30px;
@@ -183,10 +192,17 @@
             float: right;
             margin-left: 20px;
             margin-top: 50px;
+            margin-right: 50px;
         }
-
+        #graph_div {
+            position: relative;
+            float: left;
+            margin: 0;
+        }
         #table_div {
-            margin-top: 50px;
+            /*margin-top: 50px;*/
+            padding: 20px; /* Поля вокруг текста */
+            margin-top: 300px; /* Отступ сверху */
             align-content: center;
             text-align: center;
         }
@@ -203,8 +219,8 @@
     <div id="description">
         Инячина Диана Александровна P3114 Вариант 2507
     </div>
-    <div id="image_div">
-        <canvas id="canvas" class="tooltip" width="300px" height="300px" style="border:solid 1px white"></canvas>
+    <div id="graph_div">
+        <canvas class="graph" id="canvas" class="tooltip" width="300px" height="300px"></canvas>
         <label id="R_ox">R</label>
         <label id="R2_ox">R/2</label>
         <label id="-R2_ox">-R/2</label>
@@ -215,10 +231,9 @@
         <label id="-R_oy">-R</label>
     </div>
     <div id="coordinates">
-        <form method="post" id="form" action="">
+        <form id="form">
             <label>X</label>
-            <input required oninvalid="setCustomValidity('Обязательное поле!')"
-                   oninput="setCustomValidity('')" name="x" id="x1" type="radio" value="-4"><label for="x1">-4</label>
+            <input required name="x" id="x1" type="radio" value="-4"><label for="x1">-4</label>
             <input required name="x" id="x2" type="radio" value="-3"><label for="x2">-3</label>
             <input required name="x" id="x3" type="radio" value="-2"><label for="x3">-2</label>
             <input required name="x" id="x4" type="radio" value="-1"><label for="x4">-1</label>
@@ -229,13 +244,10 @@
             <input required name="x" id="x9" type="radio" value="4"> <label for="x9"> 4</label>
             <br><br>
             <label>Y</label>
-            <input type="text" required id="y" name="y" placeholder="-5...5"
-                   oninvalid="setCustomValidity('Обязательное поле!')"
-                   oninput="setCustomValidity('')">
+            <input type="text" required id="y" name="y" placeholder="-5...5">
             <br><br>
             <label>R</label>
-            <select id="r" required name="r" oninvalid="setCustomValidity('Обязательное поле!')"
-                    oninput="setCustomValidity('') ">
+            <select required id="r" name="r">
                 <option value=""></option>
                 <option value="1">1</option>
                 <option value="2">2</option>
@@ -245,8 +257,8 @@
             </select>
             <br><br>
             <div id="bottoms">
-                <input align="left" type="submit" name="button" id="button" value="отправить">
-                <input align="right" type="button" name="clear" id="clear" value="очистить" onclick="clear_table()">
+                <input align="left" type="submit" name="button" id="button" value="send">
+                <input align="right" type="reset" name="clear" id="clear" value="reset" onclick="clear_table()">
             </div>
 
         </form>
@@ -265,8 +277,8 @@
     </div>
 </div>
 <label id="o"></label>
-<script src="canvas.js"></script>
-<script src="validation.js"></script>
-<script src="contact.js"></script>
+<script src="js/canvas.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/contact.js"></script>
 </body>
 </html>

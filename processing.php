@@ -3,6 +3,7 @@
 $y = $_POST['y'];
 $r = $_POST['r'];
 $x = $_POST['x'];
+
 $time_zone_offset = $_POST['time_zone_offset'];
 
 function check_triangle($x, $y, $r)
@@ -20,7 +21,7 @@ function check_square($x, $y, $r)
 function check_circle($x, $y, $r)
 {
     return ($x >= 0 && $y >= 0) &&
-        sqrt($x/2 ^ 2 + $y ^ 2) <= $r / 2;
+        $x ^ 2 + $y ^ 2 <= ($r / 2) ^ 2;
 }
 
 
