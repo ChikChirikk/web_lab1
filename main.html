@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Лаб1</title>
+    <script src="https://yastatic.net/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    <script src="draw_table.js"></script>
+    <style>
+        body {
+            background: linear-gradient(-45deg, #e97f5e, #c465db, #5ca6ba, #e010d4);
+            background-size: 400% 400%;
+            animation: gradient 10s ease infinite;
+            color: white;
+        }
+
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        #image_div {
+            position: relative;
+            float: left;
+        }
+
+        #image_div:hover {
+            cursor: pointer;
+        }
+
+        #R_ox {
+            position: absolute;
+            right: 15px;
+            top: 160px;
+        }
+
+        #R2_ox {
+            position: absolute;
+            right: 76px;
+            top: 160px;
+        }
+
+        #-R2_ox {
+            position: absolute;
+            left: 72px;
+            top: 160px;
+        }
+
+        #-R_ox {
+            position: absolute;
+            left: 4px;
+            top: 160px;
+        }
+
+        #R_oy {
+            text-align: left;
+            position: absolute;
+            left: 120px;
+            top: 10px;
+        }
+
+        #R2_oy {
+            position: absolute;
+            left: 120px;
+            top: 76px;
+        }
+
+        #-R2_oy {
+            position: absolute;
+            left: 115px;
+            bottom: 77px;
+        }
+
+        #-R_oy {
+            position: absolute;
+            left: 115px;
+            bottom: 14px;
+        }
+
+        table {
+            margin-top: 40px;
+            align-content: center;
+            background: rgb(191, 23, 186);
+            background: linear-gradient(90deg, rgba(191, 23, 186, 0.9332107843137255) 0%, rgba(85, 221, 247, 0.9023984593837535) 100%);
+            font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+            font-size: 14px;
+            border-collapse: collapse;
+            text-align: center;
+            border-color: rgb(239, 231, 239);
+            overflow: scroll;
+        }
+
+        tbody tr:hover {
+            background: rgb(191, 23, 186);
+            background: linear-gradient(90deg, rgba(186, 25, 181, 0.93) 0%, rgba(75, 210, 236, 0.9) 100%);
+        }
+
+        th {
+            color: white;
+            padding: 10px 20px;
+        }
+
+        th, td {
+            border-style: solid;
+            border-width: 0 1px 1px 0;
+            border-color: white;
+        }
+
+        th:first-child {
+            text-align: left;
+        }
+
+        select {
+            width: 100px;
+            display: inline;
+            margin-left: 10px;
+            outline: none;
+        / / -webkit-appearance: none;
+            -moz-appearance: none;
+            border-bottom: 2px solid #555;
+            -webkit-transition: all .4s ease-in-out;
+            transition: all .4s ease-in-out;
+            border: 2px;
+            border-radius: 4px;
+        }
+
+        select:hover {
+            cursor: pointer;
+        }
+
+        select option {
+            border: 0;
+            border-bottom: 1px solid #555;
+            padding: 10px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+
+        input {
+            /*font-family: inherit;*/
+            color: dimgrey;
+            padding: 0.25em 0.5em;
+            background-color: #ffffff;
+            border: 2px;
+            border-radius: 4px;
+            border-color: rgba(191, 25, 186, 0.93);
+        }
+
+        input:hover {
+            cursor: pointer;
+        }
+
+        #description {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 16px;
+            font-family: monospace;
+        }
+
+        #content {
+            display: table;
+            width: auto;
+            margin: 0 auto;
+            padding: 70px;
+            letter-spacing: 2px;
+            text-align: center;
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.35); /* Цвет фона и значение прозрачности */
+            padding: 10px; /* Поля вокруг текста */
+            color: #fff; /* Цвет текста */
+            border-radius: 20px;
+        }
+
+        #coordinates {
+            font-size: 12px;
+            float: right;
+            margin-left: 20px;
+            margin-top: 50px;
+        }
+
+        #table_div {
+            margin-top: 50px;
+            align-content: center;
+            text-align: center;
+        }
+
+        #bottoms {
+            color: white;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div id="content">
+    <div id="description">
+        Инячина Диана Александровна P3114 Вариант 2507
+    </div>
+    <div id="image_div">
+        <canvas id="canvas" class="tooltip" width="300px" height="300px" style="border:solid 1px white"></canvas>
+        <label id="R_ox">R</label>
+        <label id="R2_ox">R/2</label>
+        <label id="-R2_ox">-R/2</label>
+        <label id="-R_ox">-R</label>
+        <label id="R_oy">R</label>
+        <label id="R2_oy">R/2</label>
+        <label id="-R2_oy">-R/2</label>
+        <label id="-R_oy">-R</label>
+    </div>
+    <div id="coordinates">
+        <form method="post" id="form" action="">
+            <label>X</label>
+            <input required oninvalid="setCustomValidity('Обязательное поле!')"
+                   oninput="setCustomValidity('')" name="x" id="x1" type="radio" value="-4"><label for="x1">-4</label>
+            <input required name="x" id="x2" type="radio" value="-3"><label for="x2">-3</label>
+            <input required name="x" id="x3" type="radio" value="-2"><label for="x3">-2</label>
+            <input required name="x" id="x4" type="radio" value="-1"><label for="x4">-1</label>
+            <input required name="x" id="x5" type="radio" value="0"> <label for="x5"> 0</label>
+            <input required name="x" id="x6" type="radio" value="1"> <label for="x6"> 1</label>
+            <input required name="x" id="x7" type="radio" value="2"> <label for="x7"> 2</label>
+            <input required name="x" id="x8" type="radio" value="3"> <label for="x8"> 3</label>
+            <input required name="x" id="x9" type="radio" value="4"> <label for="x9"> 4</label>
+            <br><br>
+            <label>Y</label>
+            <input type="text" required id="y" name="y" placeholder="-5...5"
+                   oninvalid="setCustomValidity('Обязательное поле!')"
+                   oninput="setCustomValidity('')">
+            <br><br>
+            <label>R</label>
+            <select id="r" required name="r" oninvalid="setCustomValidity('Обязательное поле!')"
+                    oninput="setCustomValidity('') ">
+                <option value=""></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <br><br>
+            <div id="bottoms">
+                <input align="left" type="submit" name="button" id="button" value="отправить">
+                <input align="right" type="button" name="clear" id="clear" value="очистить" onclick="clear_table()">
+            </div>
+
+        </form>
+    </div>
+    <div id="table_div">
+        <table id="table" align="center" border="2">
+            <tr>
+                <th>X</th>
+                <th>Y</th>
+                <th>R</th>
+                <th>Result</th>
+                <th>Script time</th>
+                <th>Time</th>
+            </tr>
+        </table>
+    </div>
+</div>
+<label id="o"></label>
+<script src="canvas.js"></script>
+<script src="validation.js"></script>
+<script src="contact.js"></script>
+</body>
+</html>
